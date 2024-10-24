@@ -1,0 +1,60 @@
+{
+  "contatos": [
+    {
+      "id": "0088",
+      "nome": "Ksisj",
+      "email": "Jsjsk@ksksj.kwwj",
+      "telefone": "66464646"
+    },
+    {
+      "id": "dfeb",
+      "nome": "Yhbnn",
+      "email": "Nksks@jsjaj.sjsj",
+      "telefone": "855588555"
+    }
+  ],
+  "usuarios": [
+    {
+      "id": "98d4",
+      "nome": "Nome ",
+      "cpf": "CPF ",
+      "email": "Email",
+      "senha": "Senha"
+    },
+    {
+      "id": "3eae",
+      "nome": "Nome ",
+      "cpf": "CPF ",
+      "email": "Email",
+      "senha": "Senha"
+    },
+    {
+      "id": "4878",
+      "nome": "Nome ",
+      "cpf": "CPF ",
+      "email": "Email",
+      "senha": "Senha"
+    },
+    {
+      "id": "4776",
+      "nome": "Bernardo",
+      "cpf": "11518696430",
+      "email": "email@email.email",
+      "senha": "Senha"
+    },
+    {
+      "id": "d2e9",
+      "nome": "Hitler ",
+      "cpf": "Hitler",
+      "email": "Hitler",
+      "senha": "Hitler"
+    },
+    {
+      "id": "6ced",
+      "nome": "admin",
+      "cpf": "admin",
+      "email": "admin",
+      "senha": "admin"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+:root {
+    --primary-color: rgb(51, 0, 255);
+    --secondary-color: rgb(255, 0, 0);
+    --border-color: #000000;
+    --text-color: #ffffff;
+    --padding: 10px;
+    --border-radius: 5px;
+    --border-radius-input:1px
+    --height: 30px;
+
+}
+
+.bt {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    padding: var(--padding);
+    border: 0;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+}
+.bt2{
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    padding: var(--padding);
+    border: 0;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+}
+.input{
+    padding: var(--padding);
+    border: 1px solid var(--border-color);
+    height: var(--height);
+}
