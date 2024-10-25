@@ -9,7 +9,7 @@ export default function LoginScreen({ navigation }) {
   const [senha,setSenha]=React.useState("");
   const login = () => {
     
-    const url = "http://192.168.1.20:3001/usuarios?email="+email+"&senha="+senha
+    const url = process.env.EXPO_PUBLIC_LOCAL_API_URL + "/usuarios?email=" + email + "&senha=" + senha;
     console.log(url)
     axios.get(url).then((result)=>{
       if(result.status===200&&result.data.length===1){
