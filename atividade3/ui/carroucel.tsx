@@ -1,6 +1,6 @@
 import { Dimensions, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import PagerView from 'react-native-pager-view';
-import { switchStringForpng, switchStringForpngMoon } from '../weatherFunctions/switcher';
+import { switchStringForpng, switchStringForpngMoon, tradutorDeFazesDaLua } from '../weatherFunctions/switcher';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
@@ -16,8 +16,8 @@ const WeatherCarousel = ({ weather, onClick }: { weather: any, onClick: () => vo
               {switchStringForpng(weather?.condition_slug ?? '', false)}
             </TouchableWithoutFeedback>
             <Text style={styles.temperature}>{weather?.temp}°</Text>
-            <Text style={styles.weatherDesc}>Precipitações</Text>
-            <Text style={styles.tempRange}>Máx: {weather?.max}° Min: {weather?.min}°</Text>
+            <Text style={styles.weatherDesc}>Temperaturas</Text>
+            <Text style={styles.tempRange}>Máx: {weather?.forecast[0].max}° Min: {weather?.forecast[0].min}°</Text>
           </View>
         </View>
 
@@ -27,6 +27,7 @@ const WeatherCarousel = ({ weather, onClick }: { weather: any, onClick: () => vo
             <TouchableWithoutFeedback onPress={onClick}>
               {switchStringForpngMoon(weather?.moon_phase ?? '')}
             </TouchableWithoutFeedback>
+              <Text style={styles.moonDescription}>{tradutorDeFazesDaLua( weather?.moon_phase?? '')}</Text>
           </View>
         </View>
       </PagerView>

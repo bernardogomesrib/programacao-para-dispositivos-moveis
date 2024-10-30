@@ -53,8 +53,6 @@ const switchStringForpngMoon=(weather:string)=>{
             return <Image source={require('../assets/API_ASSETS/hg-brasil-moon-phases/last_quarter.png')} style={{width:200,height:200}}/>;
         case "waning_gibbous":
             return <Image source={require('../assets/API_ASSETS/hg-brasil-moon-phases/waning_gibbous.png')} style={{width:200,height:200}}/>;
-        case "waning_crescent":
-            return <Image source={require('../assets/API_ASSETS/hg-brasil-moon-phases/waning_crescent.png')} style={{width:200,height:200}}/>;
         case "new":
             return <Image source={require('../assets/API_ASSETS/hg-brasil-moon-phases/new.png')} style={{width:200,height:200}}/>;
         case "waxing_crescent": 
@@ -69,5 +67,29 @@ const switchStringForpngMoon=(weather:string)=>{
             break;
     }
 }
-export { switchStringForpng, switchStringForpngMoon };
+const tradutorDeFazesDaLua=(weather:string)=>{
+    switch (weather) {
+        case "waning_crescent":
+            return "Minguante Côncava";
+
+        case "last_quarter":
+            return "Quarto Minguante";
+        case "waning_gibbous":
+            return "Minguante Gibosa";
+        case "new":
+            return "Nova";
+        case "waxing_crescent":
+            return "Crescente Côncava";
+        case "first_quarter":
+            return "Quarto Crescente";
+        case "waxing_gibbous":
+            return "Crescente Gibosa";
+        case "full":
+            return "Cheia";
+        default:
+            break;
+    }
+    
+}
+export { switchStringForpng, switchStringForpngMoon, tradutorDeFazesDaLua };
 

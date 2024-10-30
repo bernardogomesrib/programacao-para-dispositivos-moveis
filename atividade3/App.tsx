@@ -7,15 +7,16 @@ const WeatherApp = () => {
   const [city, setCity] = React.useState('');
   const [today, setToday] = React.useState<any>({});
   const [loaded, setLoaded] = React.useState(false)
+  const fetchWeather = async () => {
+    const aux = await getLocalWeather();
+    if (aux) {
+      setWeather(aux.results);
+      setToday(aux.results.forecast[0]);
+      setLoaded(true);
+    }
+  };
   React.useEffect(() => {
-    const fetchWeather = async () => {
-      const aux = await getLocalWeather();
-      if (aux) {
-        setWeather(aux.results);
-        setToday(aux.results.forecast[0]);
-        setLoaded(true);
-      }
-    };
+    
     fetchWeather();
   }, []);
 
@@ -25,7 +26,7 @@ const WeatherApp = () => {
   return (
     <>
       {loaded === true ? (
-        <Home weather={weather} today={today} />
+        <Home weather={weather} today={today} onRefresh={fetchWeather}/>
       ) : (
         <ScrollView style={styles.container}>
           <Text>Carregando</Text>
