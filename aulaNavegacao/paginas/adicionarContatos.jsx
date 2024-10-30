@@ -10,20 +10,21 @@ export default function AdicionarContatos({ navigation, route }) {
 
     const handleSaveContact = async () => {
         try {
-            const response = await axios.post('http://192.168.1.20:3001/contatos', {
+            const response = await axios.post(`${process.env.EXPO_PUBLIC_LOCAL_API_URL}/contatos`, {
                 nome,
                 email,
                 telefone
             });
             if (response.status === 201) {
                 alert('Contato salvo com sucesso!');
-                navigation.goBack();
+                navigation.navigate("Lista de contatos", { merge: true });
             }
         } catch (error) {
             alert('Erro ao salvar contato');
             console.error(error);
         }
     };
+    
 
     return (
         <View style={styles.container}>
@@ -74,3 +75,4 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8,
     },
 });
+
