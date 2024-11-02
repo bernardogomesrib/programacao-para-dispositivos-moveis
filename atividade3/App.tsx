@@ -1,13 +1,16 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text } from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, Text } from 'react-native';
 import Home from './ui/home';
-import { getLocalWeather } from './weatherFunctions/weather';
+import { getLocalWeather, getWeatherFromCity } from './weatherFunctions/weather';
 const WeatherApp = () => {
   const [weather, setWeather] = React.useState<any>({});
   const [city, setCity] = React.useState('');
   const [today, setToday] = React.useState<any>({});
   const [loaded, setLoaded] = React.useState(false)
-  const fetchWeather = async () => {
+  const [changeCity, setChangeCity] = React.useState(false);
+  let lastFunctionUsed: ((city:string) => any) | null = null;
+  const fetchWeather = async (city:string) => {
+    lastFunctionUsed = fetchWeather;
     const aux = await getLocalWeather();
     if (aux) {
       setWeather(aux.results);
@@ -15,24 +18,41 @@ const WeatherApp = () => {
       setLoaded(true);
     }
   };
+
+  const useLastFunctionUsed = async () => {
+    if (lastFunctionUsed === null) {
+      await fetchWeather(city);
+    } else {
+      await lastFunctionUsed(city);
+      
+    }
+  }
+
   React.useEffect(() => {
-    
-    fetchWeather();
+    useLastFunctionUsed();
   }, []);
 
-  const getWeatherOnCity = async (city: string) => {
-
+  const getWeatherOnCity = async (city:string) => {
+    lastFunctionUsed=getWeatherOnCity;
+    
+    const aux = await getWeatherFromCity(city);
+    if (aux) {
+      setWeather(aux.results);
+      setToday(aux.results.forecast[0]);
+      setLoaded(true);
+      setChangeCity(false);
+    }
   }
   return (
-    <>
+    <SafeAreaView style={styles.container}>
       {loaded === true ? (
-        <Home weather={weather} today={today} onRefresh={fetchWeather}/>
+        <Home setChangeCity={setChangeCity} changeCity={changeCity} weather={weather} today={today} city={city} setCity={setCity} searchWeatherByCityName={getWeatherOnCity} onRefresh={useLastFunctionUsed}/>
       ) : (
         <ScrollView style={styles.container}>
           <Text>Carregando</Text>
         </ScrollView>
       )}
-    </>
+    </SafeAreaView>
   );
 };
 

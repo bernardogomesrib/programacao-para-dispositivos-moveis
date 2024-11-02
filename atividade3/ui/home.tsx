@@ -1,18 +1,46 @@
+import axios from 'axios';
 import React, { useCallback, useState } from 'react';
-import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Alert, RefreshControl, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { switchStringForpng } from '../weatherFunctions/switcher';
 import WeatherCarousel from './carroucel';
+import CitySelect from './CitySelect';
 
 interface HomeProps {
   weather: any;
   today: any;
+  city: string;
+  changeCity: boolean;
+  setChangeCity: (changeCity: boolean) => void;
+  setCity: (city: string) => void;
+  searchWeatherByCityName: (city:string) => void;
   onRefresh: () => Promise<void>; // Adicione uma prop para a função de atualização
 }
 
-export default function Home({ weather, today, onRefresh }: HomeProps){
+export default function Home({ weather, today, city , changeCity, setChangeCity, setCity, searchWeatherByCityName, onRefresh }: HomeProps) {
   const [viewWeather, setViewWeather] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  
+  const [cityList, setCityList] = useState<any[]>([]);
+
+  const getCityList = async () => {
+    if (cityList.length === 0) {
+      try {
+        const response = await axios.get('https://servicodados.ibge.gov.br/api/v1/localidades/municipios');
+        const simplifiedCityList = response.data.map((city: any) => ({
+          id: city.id,
+          title: city.nome + "," + city.microrregiao.mesorregiao.UF.sigla
+        }));
+        setCityList(simplifiedCityList);
+      } catch (error) {
+        Alert.alert('Erro', 'Erro ao buscar lista de cidades');
+      }
+    }
+  };
+
+  React.useState(() => {
+    getCityList();
+  });
 
   const handleCarouselClick = () => {
     setViewWeather(!viewWeather);
@@ -31,7 +59,6 @@ export default function Home({ weather, today, onRefresh }: HomeProps){
     let date1 = new Date("2021-01-01T" + timeNow + ":00");
     let date2 = new Date("2021-01-01T" + timeSunset + ":00");
     let resultado = date1.getTime() < date2.getTime();
-    console.log(date1.getTime() + "é menor que " + date2.getTime() + "? " + resultado + "\n horario agora: " + timeNow + " horario do por do sol: " + timeSunset);
     return resultado;
   };
 
@@ -42,18 +69,31 @@ export default function Home({ weather, today, onRefresh }: HomeProps){
   }, [onRefresh]);
 
   return (
-    <ScrollView
+    <View
       style={comparaHoras(weather.time, weather.sunset) ? styles.container : styles.containerDark}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefreshHandler} />
-      }
+      
     >
-      <View style={styles.header}>
-        <Icon name="map-marker" size={24} color="#fff" />
-        <Text style={styles.location}>{weather.city}</Text>
-        <Icon name="bell-outline" size={24} color="#fff" style={styles.notification} />
-      </View>
-
+      {!changeCity ? (
+        <TouchableWithoutFeedback onPress={() => setChangeCity(!changeCity)} style={styles.header} >
+            <View style={styles.header}>
+            <Icon name="map-marker" size={24} color="#fff" />
+            <Text style={styles.location}>{weather.city}</Text>
+            <Icon name="magnify" size={24} color="#fff" style={styles.notification} />
+            </View>
+        </TouchableWithoutFeedback >
+      ) : (<TouchableWithoutFeedback onPress={() => {setChangeCity(!changeCity) }} style={styles.header}>
+        <View style={styles.header}>
+          <CitySelect cityList={cityList} city={city} setCity={setCity} searchWeatherByCityName={searchWeatherByCityName} />
+          <Icon name="close" size={24} color="#fff" style={styles.notification} />
+        </View>
+      </TouchableWithoutFeedback>)}
+      <ScrollView style={styles.container}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefreshHandler}
+          />
+        }>
       <WeatherCarousel weather={weather} onClick={() => handleCarouselClick()} />
 
       <View style={styles.detailsContainer}>
@@ -92,7 +132,17 @@ export default function Home({ weather, today, onRefresh }: HomeProps){
         ))}
         <Text> tamanho do array:{weather.forecast.length}</Text>
       </View>}
-    </ScrollView>
+      {viewWeather && (
+        <View>
+          {Object.entries(cityList.slice(1, 10)).map(([key, value]) => (
+            <Text key={key}>
+              {key}: {JSON.stringify(value).replace(",\"", "\",\n\"")}
+            </Text>
+          ))}
+        </View>
+      )}
+      </ScrollView>
+    </View>
   );
 }
 
